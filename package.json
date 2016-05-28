@@ -1,0 +1,16 @@
+{
+  "name": "task",
+  "version": "0.1.0",
+  "description": "A cancellable operation resulting in a Promise.",
+  "main": "task.js",
+  "scripts": {
+    "test": "ava --tap test | faucet"
+  },
+  "keywords": [],
+  "author": "Michael Schoonmaker <michael.r.schoonmaker@gmail.com> (https://www.schoonology.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "~0.15.1",
+    "faucet": "0.0.1"
+  }
+}
