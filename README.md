@@ -2,6 +2,34 @@
 
 A spec and reference implementation for Tasks: cancellable operations.
 
+_This is still very much a work-in-progress, but feedback is very welcome!_
+
+## Naïve example
+
+```js
+var task = new Task(function *() {
+  doSomethingUrgent()
+
+  yield // This is a cancellation point.
+
+  getSomeMutualResource()
+
+  try {
+    yield
+  } catch (e) {
+    // Cancellation has been requested. Let's oblige.
+    cleanUpMutualResource()
+    return
+  }
+
+  // No cancellation at this point, but let's return the Promise.
+  return doSomethingImportant()
+    .then(function () {
+      cleanUpMutualResource()
+    })
+})
+```
+
 ## Goals
 
 1. Operation authors opt-in to cancellation at specific locations.
