@@ -65,6 +65,19 @@ test('task.result resolves with yielded generator return value', t => {
     })
 })
 
+test('task.result rejects with thrown error in non-generator', t => {
+  var task = new Task(function () {
+    throw new Error('OOPS')
+  })
+
+  return task.result
+    .then(() => {
+      t.fail('Should have been rejected')
+    }, err => {
+      t.truthy(err.message === 'OOPS')
+    })
+})
+
 test('task.result rejects with thrown error in generator', t => {
   var task = new Task(function *() {
     throw new Error('OOPS')
@@ -134,5 +147,53 @@ test('task.cancel allows cleanup', t => {
     }, err => {
       t.truthy(err.message === 'CANCEL')
       t.truthy(clean)
+    })
+})
+
+test('task.result is resolved with a returned Promise from non-generator', t => {
+  var task = new Task(function () {
+    return Promise.resolve(42)
+  })
+
+  return task.result
+    .then(value => {
+      t.truthy(value === 42)
+    })
+})
+
+test('task.result is resolved with a returned Promise from generator', t => {
+  var task = new Task(function *() {
+    return Promise.resolve(42)
+  })
+
+  return task.result
+    .then(value => {
+      t.truthy(value === 42)
+    })
+})
+
+test('task.result is rejected with a returned, rejected Promise from non-generator', t => {
+  var task = new Task(function () {
+    return Promise.reject(new Error('OOPS'))
+  })
+
+  return task.result
+    .then(() => {
+      t.fail('Should have been rejected')
+    }, err => {
+      t.truthy(err.message === 'OOPS')
+    })
+})
+
+test('task.result is rejected with a returned, rejected Promise from generator', t => {
+  var task = new Task(function *() {
+    return Promise.reject(new Error('OOPS'))
+  })
+
+  return task.result
+    .then(() => {
+      t.fail('Should have been rejected')
+    }, err => {
+      t.truthy(err.message === 'OOPS')
     })
 })
